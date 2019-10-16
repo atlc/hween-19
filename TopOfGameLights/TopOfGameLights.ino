@@ -1,35 +1,44 @@
 #include <Adafruit_NeoPixel.h>
 
-#define NEO_PIN 7
+#define NEO_PIN 8
+#define BACKLIGHT 7
 #define N_LEDS 60
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS, NEO_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS*2, NEO_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel backlight = Adafruit_NeoPixel(N_LEDS, BACKLIGHT, NEO_GRB + NEO_KHZ800);
 
 // #define WHITE strip.Color(225,192,80)
-#define WHITE strip.Color(22,19,8)
+#define WHITE strip.Color(60,50,28)
+#define BACKLIGHT_WHITE strip.Color(60,60,60)
 
 void setup() {
   Serial.begin(9600);
   strip.begin();
-  chase();
-  flash();
+  backlight.begin();
 }
 
 void loop() {
+  backlightOn();
   chase();
   flash();
   flash();
+  delay(150);
+  chase();
+  flash();
+  flash();
+  delay(150);
+  chase();
+  flash();
+  flash();
+  delay(150);
   rainbow(128);
-  secondsToStayFullyLit(30);
 }
 
-static void secondsToStayFullyLit(int s) {
-  int timeToStayLit = s * 1000;
-  for(int i=0; i<N_LEDS+8; i++) {
-    strip.setPixelColor(i, WHITE);
-    strip.show();
-  }
-  delay(timeToStayLit);
+static void backlightOn() {
+   for(int i=0; i<N_LEDS; i++) {
+    backlight.setPixelColor(i, BACKLIGHT_WHITE);
+    backlight.show();
+  } 
 }
 
 static void chase() {
@@ -39,7 +48,7 @@ static void chase() {
       strip.setPixelColor(i-8, 0); // Erase pixel a few steps back
       strip.show();
     }
-    delay(15);
+    delay(8);
   }
   delay(350);
 }
@@ -49,25 +58,28 @@ static void flash() {
     strip.setPixelColor(i, WHITE);
   }
   strip.show();
-  delay(256);
+  delay(175);
   
   for (int i=0; i<N_LEDS; i++) {
     strip.setPixelColor(i, 0);
   }
   strip.show();
-  delay(128);
+  delay(80);
 }
 
 void rainbow(uint8_t wait) {
+  backlight.clear();
+  backlight.show();
   uint16_t i, j;
-
-  for(j=0; j<256; j++) {
+  for(j=0; j<128; j++) {
     for(i=0; i<strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel((i*1+j) & 255));
     }
     strip.show();
     delay(wait);
   }
+  strip.clear();
+  strip.show();
 }
 
 
