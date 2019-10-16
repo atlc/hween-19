@@ -118,6 +118,7 @@ int toxic[] = {
 int notesInToxic = 52;
 
 void setup() {
+  playToxic();
   lc.shutdown(0,false);
   // Set brightness to a medium value
   lc.setIntensity(0,8);
@@ -174,6 +175,5 @@ void drawFaces(){
 }
 
 void loop(){
-  playToxic();
   drawFaces();
 }
