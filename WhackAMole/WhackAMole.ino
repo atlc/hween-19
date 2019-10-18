@@ -48,7 +48,7 @@ const int OUCH_LEN = sizeof(OUCH)/8;
 #define N_LEDS 60
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(N_LEDS, NEO_PIN, NEO_GRB + NEO_KHZ800);
-#define WHITE strip.Color(60,50,28)
+#define WHITE strip.Color(45,40,21)
 
 void setup() {
   int devices=lc.getDeviceCount();
@@ -112,16 +112,14 @@ static void flash() {
   }
   strip.show();
   delay(175);
-  
-  for (int i=0; i<N_LEDS; i++) {
-    strip.setPixelColor(i, 0);
-  }
+  strip.clear();
   strip.show();
   delay(80);
 }
 
 void rainbow(uint8_t wait) {
-  uint16_t i, j;
+  uint16_t i = 0;
+  uint16_t j = 0;
   for(j=0; j<128; j++) {
     for(i=0; i<strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel((i*1+j) & 255));
