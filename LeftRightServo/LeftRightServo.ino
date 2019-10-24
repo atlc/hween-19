@@ -15,7 +15,7 @@ int upButtState = 0;
 const int SERVO_PIN = 6;
 Servo servo;
 int servoAngle = 90;
-
+int servoDirection = 1;
 
 /* Setup for the stepper motor */
 const int STEPPER_STEP_PIN = 3;
@@ -43,10 +43,13 @@ static void evaluateMotors() {
   downButtState = analogRead(DOWN_BUTT);
   upButtState = analogRead(UP_BUTT);
   
-  if (rightButtState > 900 && leftButtState < 500 && servoAngle < 120) {
-    servoAngle += 3;
-  } else if (leftButtState > 900 && servoAngle > 40) {
-    servoAngle -= 3;
+  if (rightButtState > 900 && leftButtState < 300) {
+    servoAngle += ( 3 * servoDirection);
+    if (servoAngle >=135) {
+      servoDirection = -1;
+    } else if (servoAngle <= 45) {
+      servoDirection = 1;
+    }
   }
   
   servo.write(servoAngle);
@@ -71,6 +74,7 @@ static void evaluateMotors() {
     }
   }  
  
+ delay(50);
   Serial.print("Down:  "); Serial.print(downButtState); Serial.print(";     Up:  "); Serial.println(upButtState);
 
   Serial.print("Right:  "); Serial.print(rightButtState); Serial.print(";     Left:  "); Serial.print(leftButtState); Serial.print(";     Angle:  "); Serial.println(servoAngle);
